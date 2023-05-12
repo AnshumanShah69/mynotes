@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:mynotes/views/login_views.dart';
 import 'package:mynotes/views/register_view.dart';
+import 'package:mynotes/views/verify_email_view.dart';
 
 import 'firebase_options.dart';
 
@@ -37,21 +38,31 @@ class HomePage extends StatelessWidget {
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
-        // switch (snapshot.connectionState) {
-        //   case ConnectionState.done:
-        //     // final user = FirebaseAuth.instance.currentUser;
-        //     // print(user);
-        //     // if (user?.emailVerified ?? false) {
-        //     //   return const Text("done");
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (user.emailVerified) {
+                print("Email is verified");
+              } else {
+                return const VerifyEmailView();
+              }
+            } else {
+              return const LoginView();
+            }
+            return const Text("Done");
+          //     // print(user);
+          //     // if (user?.emailVerified ?? false) {
+          //     //   return const Text("done");
 
-        //     //   ///here we check if the user is verified in the firebase db and return T or F
-        //     // } else {
-        //     //   return const VerifyEmailView(); //here the navigator is a class which asks to create a material page route to push (it contains a builder which further returns a widget)
-        //     // }
-        //     return const LoginView();
-        //   default:
-        return const CircularProgressIndicator();
-        // }
+          //     //   ///here we check if the user is verified in the firebase db and return T or F
+          //     // } else {
+          //     //   return const VerifyEmailView(); //here the navigator is a class which asks to create a material page route to push (it contains a builder which further returns a widget)
+          //     // }
+          //     return const LoginView();
+          default:
+            return const CircularProgressIndicator();
+        }
       },
     );
   }
