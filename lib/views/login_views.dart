@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import "dart:developer" as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -60,21 +61,23 @@ class _LoginViewState extends State<LoginView> {
               ///here we create a user in firebase after taking the input from the user from app
               //// we use try catch block here as we are expecting error from firebase related issues so we put this block here
               try {
-                final userCredential =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email,
                   password: password,
                 );
-                print(userCredential);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/notes/",
+                  (route) => false,
+                );
 
                 ///here we can write this code to target specific exceptions in the code of try which we are expecting to have error
               } on FirebaseAuthException catch (e) {
                 ///can also use catch to target all errors in try block
-                print(e.code);
+                devtools.log(e.code);
                 if (e.code == "user-not-found") {
-                  print("User not found");
+                  devtools.log("user-not-found");
                 } else if (e.code == "wrong-password") {
-                  print("wrong password");
+                  devtools.log("wrong password");
                 }
               }
             },
