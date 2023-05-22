@@ -66,10 +66,20 @@ class _LoginViewState extends State<LoginView> {
                   email: email,
                   password: password,
                 );
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (route) => false,
-                );
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  ///user email is verified
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (route) => false,
+                  );
+                } else {
+                  ///user email is not verified
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (route) => false,
+                  );
+                }
 
                 ///here we can write this code to target specific exceptions in the code of try which we are expecting to have error
               } on FirebaseAuthException catch (e) {
@@ -92,7 +102,7 @@ class _LoginViewState extends State<LoginView> {
                   );
                 }
               } catch (e) {
-                ///here this is given coz after all the error checking if no error matches so this prints
+                ///here this is given coz after all the error checking if no error matches for firebaseauth exception so this prints
                 await showErrorDialog(
                   context,
                   e.toString(),
