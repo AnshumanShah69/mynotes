@@ -1,5 +1,7 @@
 ////we are creating this file to extract the user from the firbase and so that the extracted user can be used by any auth provider available be it google,twitter,github etc....
 
+///this file is made to use the interface made in the auth_provieder file for the users
+import "package:firebase_core/firebase_core.dart";
 import "package:mynotes/services/auth/auth_user.dart";
 import "package:mynotes/services/auth/auth_provider.dart";
 import "package:mynotes/services/auth/auth_exceptions.dart";
@@ -7,8 +9,17 @@ import "package:mynotes/services/auth/auth_exceptions.dart";
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 
+import "../../firebase_options.dart";
+
 ////here we are implementing all the mentioned functions and parameters bcoz it is mentioned in the authprovider abstract class
 class FirebaseAuthProvider implements AuthProvider {
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
   @override
   Future<AuthUser> createUser({
     required String email,

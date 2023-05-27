@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
+import 'package:mynotes/services/auth/auth_exceptions.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -62,12 +63,12 @@ class _LoginViewState extends State<LoginView> {
               ///here we create a user in firebase after taking the input from the user from app
               //// we use try catch block here as we are expecting error from firebase related issues so we put this block here
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   ///user email is verified
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
@@ -82,30 +83,20 @@ class _LoginViewState extends State<LoginView> {
                 }
 
                 ///here we can write this code to target specific exceptions in the code of try which we are expecting to have error
-              } on FirebaseAuthException catch (e) {
-                ///can also use catch to target all errors in try block
-                ///from here we do error handling for various cases
-                if (e.code == "user-not-found") {
-                  await showErrorDialog(
-                    context,
-                    "User not found",
-                  );
-                } else if (e.code == "wrong-password") {
-                  await showErrorDialog(
-                    context,
-                    "Wrong Credentials",
-                  );
-                } else {
-                  await showErrorDialog(
-                    context,
-                    "Error :${e.code}",
-                  );
-                }
-              } catch (e) {
-                ///here this is given coz after all the error checking if no error matches for firebaseauth exception so this prints
+              } on UserNotFoundAuthException {
                 await showErrorDialog(
                   context,
-                  e.toString(),
+                  "User not found",
+                );
+              } on WrongPasswordAuthException {
+                await showErrorDialog(
+                  context,
+                  "Wrong Credentials",
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  "Authentication Error",
                 );
               }
             },

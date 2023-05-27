@@ -1,12 +1,14 @@
 ///it encapsulates all the possible provider for authentication in the future so we have made this file
 /// here we also take the copy of the user we created in auth_user
 
+///this file is kinda Interface page just the interface of the service proveiders
 import "package:mynotes/services/auth/auth_user.dart";
 
 ///we are amking this authprovider class abstract to serve this as a blueprint to various auth providers to work on our given user
 ///
 //its actually a login function
 abstract class AuthProvider {
+  Future<void> initialize();
   ////here we try to get the user from any auth provider....eg google,twitter,github etc
   AuthUser? get currentUser;
   Future<AuthUser> logIn({
