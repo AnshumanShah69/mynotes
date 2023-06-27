@@ -6,9 +6,10 @@ import "package:flutter/foundation.dart";
 @immutable
 class AuthUser {
   final bool isEmailVerified;
-  const AuthUser(this.isEmailVerified);
+  const AuthUser({required this.isEmailVerified});
 
-  factory AuthUser.fromFirebase(User user) => AuthUser(user.emailVerified);
+  factory AuthUser.fromFirebase(User user) =>
+      AuthUser(isEmailVerified: user.emailVerified);
 
   ///here we have created a kind of copy of a user and placed the values of the original fetched firebase user details into our own made copy so to make sure we are not exposing the UI with our firebase
 }

@@ -11,7 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart'
 
 import "../../firebase_options.dart";
 
-////here we are implementing all the mentioned functions and parameters bcoz it is mentioned in the authprovider abstract class
+////here we are implementing all the mentioned functions and parameters bcoz it is mentioned in the authprovider abstract interface
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<void> initialize() async {
@@ -58,6 +58,7 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
 
   ///here we are calling the factory user from auth_dart and getting the new copy of the user
+  ///here either the currentUser is retrieved from the firebase database or null is returned
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
