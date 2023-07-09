@@ -21,6 +21,9 @@ void main() {
       expect(
         provider.logOut(),
         throwsA(const TypeMatcher<NotInitializedException>()),
+
+        ///throwsA expects expression to throw an error
+        ///TypeMatcher is matches the type of the expected error
       );
     });
 
